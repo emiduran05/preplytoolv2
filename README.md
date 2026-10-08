@@ -2,7 +2,7 @@
 
 ## Desplegar en Vercel
 
-El proyecto incluye el frontend de Vite y la función `api/index.js`, que sirve Express. `vercel.json` dirige `/api/*` a esa función. Usa el preset Vite, comando `npm run build` y directorio de salida `dist`.
+El proyecto incluye el frontend de Vite y la función `api/index.js`, que sirve Express. `vercel.json` dirige `/api/*` a esa función. Usa el preset Vite, comando `npm run build` y directorio de salida `dist`. `package.json` fija Node.js 24.x para el build y las funciones: `sanitize-html` 2.18.0 utiliza un parser ESM que necesita un runtime moderno con soporte para `require(ESM)`. Si el proyecto ya existía, confirma Node.js 24.x en Settings → Build and Deployment y redespliega sin reutilizar la caché de build.
 
 En Settings → Environment Variables agrega `DATABASE_URL` (PostgreSQL remoto accesible desde Vercel), `DATABASE_SSL` según tu proveedor, `JWT_SECRET` (al menos 32 caracteres aleatorios), `TEACHER_EMAIL` y `TEACHER_PASSWORD`. Configúralas en los entornos donde usarás la app y vuelve a desplegar después de cambiarlas. No uses una conexión a localhost en Vercel. `.env` no se sube al repositorio.
 
@@ -16,7 +16,7 @@ React + Vite y API Node.js/Express, sobre las tablas del respaldo real `preplyto
 
 ## Iniciar
 
-Requiere Node.js 22 o superior. Desde este directorio:
+Requiere Node.js 24.x. Desde este directorio:
 
 ```powershell
 npm install
