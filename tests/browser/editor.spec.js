@@ -13,6 +13,11 @@ test.beforeEach(async({page})=>{
   if(path==='/api/config')result={preview:false,authReady:true};
   else if(path==='/api/catalog')result={niveles:[{id:1,nombre:'A1'}],etapas:[{id:1,nombre:'Primeros pasos',nivel_id:1}],lecciones:lessons.map(l=>presentLesson(l,'teacher'))};
   else if(path==='/api/students')result=[];
+  else if(path==='/api/vocabulary/definition'){
+   const definitions={saludar:'Dirigir palabras de cortesía a una persona.',despedirse:'Decir adiós.',aprender:'Adquirir conocimientos.'};
+   if(!definitions[body.word])return route.fulfill({status:404,json:{error:'No se encontró una definición en español.'}});
+   result={word:body.word,definition:definitions[body.word],source:{name:'Wikcionario',url:'https://es.wiktionary.org/wiki/'+body.word,license:'CC BY-SA 4.0',licenseUrl:'https://creativecommons.org/licenses/by-sa/4.0/'}};
+  }
   else if(path==='/api/exercises/preview')result=exerciseDocument(body.html);
   else if(path==='/api/exercises/check')result=grade(parseExercises(body.html),body.answers);
   else if(/^\/api\/lessons\/\d+\/check$/.test(path))result=grade(parseExercises(lessons.find(l=>l.id===Number(path.split('/')[3])).ejercicios_leccion),body.answers);
@@ -105,13 +110,23 @@ test('vocabulario crea una sola tabla, se guarda y continúa desde el editor',as
  await page.getByRole('button',{name:/Clase de prueba original/}).click();
  const add=async(word,definition)=>{
   await page.getByRole('button',{name:'Agregar vocabulario',exact:true}).click();const dialog=page.getByRole('dialog',{name:'Agregar vocabulario'});
-  await expect(dialog.getByRole('button',{name:'Agregar a la tabla'})).toBeDisabled();await dialog.getByRole('textbox',{name:'Palabra',exact:true}).fill(word);await dialog.getByRole('textbox',{name:'Definición',exact:true}).fill(definition);await dialog.getByRole('button',{name:'Agregar a la tabla'}).click();await expect(dialog).toHaveCount(0);
+  await expect(dialog.getByRole('button',{name:'Agregar a la tabla'})).toBeDisabled();await expect(dialog.getByRole('textbox',{name:'Definición',exact:true})).toHaveCount(0);await dialog.getByRole('textbox',{name:'Palabra',exact:true}).fill(word);await dialog.getByRole('button',{name:'Agregar a la tabla'}).click();await expect(dialog).toHaveCount(0);
  };
  await add('saludar','Dirigir palabras de cortesía a una persona.');await add('despedirse','Decir adiós.');
  const table=page.locator('.lesson-reading-content table[data-vocabulary=true]');await expect(table).toHaveCount(1);await expect(table.locator('tr')).toHaveCount(3);await expect(table.locator('th')).toHaveText(['Palabra','Definición']);await expect(table).toContainText('Dirigir palabras');
  await page.reload();await page.getByRole('button',{name:/Clase de prueba original/}).click();await expect(table.locator('tr')).toHaveCount(3);
  await page.getByRole('button',{name:'Editar clase',exact:true}).click();await add('aprender','Adquirir conocimientos.');const editorTable=page.locator('.document-body table[data-vocabulary=true]');await expect(editorTable).toHaveCount(1);await expect(editorTable.locator('tr')).toHaveCount(4);
  await page.getByRole('button',{name:'Guardar clase',exact:true}).click();await expect(table.locator('tr')).toHaveCount(4);await expect(table).toContainText('Adquirir conocimientos.');
- await add('<script>ejemplo</script>','Texto literal <b>sin ejecutar</b>.');await expect(table).toContainText('<script>ejemplo</script>');await expect(table.locator('script')).toHaveCount(0);
+ await expect(table.getByRole('link',{name:'Wikcionario'})).toHaveCount(3);
+ await page.getByRole('button',{name:'Agregar vocabulario',exact:true}).click();await page.getByRole('dialog').getByRole('textbox',{name:'Palabra',exact:true}).fill('xyzsinpalabra');await page.getByRole('button',{name:'Agregar a la tabla'}).click();await expect(page.getByRole('alert')).toContainText('No se encontró');await expect(table.locator('tr')).toHaveCount(4);await page.getByRole('button',{name:'Cancelar',exact:true}).click();
  await page.getByRole('button',{name:'Activar modo oscuro'}).click();await expect(table).toBeVisible();await page.screenshot({path:'test-results/vocabulary-table.png',fullPage:true});
+});
+
+test('color del borde se aplica a toda la tabla y persiste en lectura y modo oscuro',async({page})=>{
+ await page.getByRole('button',{name:/Clase de prueba original/}).click();await page.getByRole('button',{name:'Editar clase',exact:true}).click();await page.getByRole('button',{name:'Insertar',exact:true}).click();await page.locator('.ribbon-content').getByRole('button',{name:'Tabla',exact:true}).click();await page.getByRole('dialog').getByRole('button',{name:'Insertar',exact:true}).click();
+ const border=page.getByLabel('Color del borde de tabla');await expect(border).toBeEnabled();await border.fill('#e05c93');await expect(page.locator('.document-body td,.document-body th').first()).toHaveCSS('border-top-color','rgb(224, 92, 147)');
+ await page.getByRole('button',{name:'+ Fila',exact:true}).click();await expect(page.locator('.document-body td').last()).toHaveCSS('border-top-color','rgb(224, 92, 147)');
+ await page.getByRole('button',{name:'Guardar clase',exact:true}).click();await expect(page.locator('.lesson-reading-content td,.lesson-reading-content th').first()).toHaveCSS('border-top-color','rgb(224, 92, 147)');
+ await page.getByRole('button',{name:'Activar modo oscuro'}).click();await expect(page.locator('.lesson-reading-content td,.lesson-reading-content th').first()).toHaveCSS('border-top-color','rgb(224, 92, 147)');
+ await page.getByRole('button',{name:'Editar clase',exact:true}).click();await page.locator('.document-body td').first().click();await page.getByRole('button',{name:'Tabla',exact:true}).click();await expect(border).toHaveValue('#e05c93');await expect(page.locator('.document-body th').first()).toHaveCSS('border-top-color','rgb(224, 92, 147)');
 });

@@ -11,6 +11,7 @@ import {connected,snapshot,query} from './db.js';
 import {parseExercises,exerciseDocument,grade} from './exercises.js';
 import {presentLesson} from './lesson.js';
 import {catalogRoutes} from './catalog-routes.js';
+import {lookupDefinition} from './dictionary.js';
 const app=express();app.use(helmet({contentSecurityPolicy:false}));app.use(express.json({limit:'12mb'}));
 app.use('/api',(req,res,next)=>{
  if(!connected&&!snapshot)return res.status(503).json({error:'Configura DATABASE_URL con una base PostgreSQL accesible desde el servidor. En Vercel no se utiliza el respaldo local.'});
@@ -26,6 +27,9 @@ app.get('/api/config',(req,res)=>res.json({preview:!connected,authReady:ready()}
 app.post('/api/login',rateLimit({windowMs:15*60*1000,limit:30}),async(req,res)=>{if(!connected||!ready())return res.status(503).json({error:'Configura PostgreSQL y las credenciales en .env.'});const {email,password,token}=req.body;let user;if(token){const {rows}=await query('SELECT student_id FROM aula_student_access WHERE token_hash=$1',[hash(token)]);if(rows[0])user={role:'student',id:rows[0].student_id}}else if(typeof password==='string'&&email===process.env.TEACHER_EMAIL&&timingSafeEqual(Buffer.from(hash(password)),Buffer.from(hash(process.env.TEACHER_PASSWORD))))user={role:'teacher'};if(!user)return res.status(401).json({error:'Credenciales incorrectas.'});res.json({token:jwt.sign(user,process.env.JWT_SECRET,{expiresIn:'8h'}),user})});
 app.use('/api',auth);
 catalogRoutes(app,teacher);
+app.post('/api/vocabulary/definition',teacher,async(req,res)=>{
+ try{res.json(await lookupDefinition(req.body.word))}catch(error){res.status(error.status||502).json({error:error.message})}
+});
 app.post('/api/exercises/preview',teacher,(req,res)=>res.json(exerciseDocument(req.body.html||'')));
 app.post('/api/exercises/check',teacher,(req,res)=>res.json(grade(parseExercises(req.body.html||''),req.body.answers||{})));
 app.get('/api/catalog',async(req,res)=>{const data=connected?Object.fromEntries(await Promise.all(['niveles','etapas','lecciones'].map(async name=>[name,(await query(`SELECT * FROM ${name}`)).rows]))):{niveles:snapshot.niveles,etapas:snapshot.etapas,lecciones:snapshot.lecciones};res.json({...data,lecciones:data.lecciones.map(l=>presentLesson(l,req.user.role))})});

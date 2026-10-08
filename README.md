@@ -35,7 +35,7 @@ Abre http://127.0.0.1:5173. Sin DATABASE_URL válida se utiliza el respaldo en *
 
 ## Uso
 
-- Vocabulario: el profesor puede pulsar **Agregar vocabulario** al abrir una lección o en el editor. Introduce una palabra y su definición; se crea una tabla con ambas columnas al final del contenido, y cada nueva entrada agrega una fila a la misma tabla. En la vista de lectura se guarda inmediatamente; en el editor usa **Guardar clase**. La tabla forma parte de la lección compartida y también aparece para los alumnos. Se puede editar con las herramientas de tablas del editor y no necesita una migración de base de datos.
+- Vocabulario: el profesor puede pulsar **Agregar vocabulario** al abrir una lección o en el editor. Introduce únicamente la palabra: la API consulta automáticamente su primera definición en español en Wikcionario y agrega la atribución y licencia CC BY-SA 4.0. No requiere una clave de API. Si no encuentra una entrada, no agrega una fila vacía y permite corregir la palabra. Se crea una tabla con ambas columnas al final del contenido, y cada nueva entrada agrega una fila a la misma tabla. En la vista de lectura se guarda inmediatamente; en el editor usa **Guardar clase**. La tabla forma parte de la lección compartida y también aparece para los alumnos. Se puede editar con las herramientas de tablas del editor y no necesita una migración de base de datos.
 
 - Biblioteca: crea o edita clases dentro de una etapa existente. Los niveles, etapas y orden se leen de tu respaldo.
 - Editor de documentos: cinta Inicio / Insertar / Tabla, estilos, fuentes, tamaño, negrita, cursiva, subrayado, tachado, listas, alineación, interlineado, colores y resaltado. Hoja de documento con zoom y detalles de clase en un panel lateral.
@@ -78,3 +78,4 @@ Usa los iconos de lápiz, papelera y mover para gestionar los elementos. Arrastr
 En **Biblioteca de clases**, el panel **Niveles y etapas** muestra la estructura completa. El profesor puede crear, renombrar y ordenar niveles y etapas, mover etapas a otro nivel y mover clases a otra etapa. En el editor, los selectores de nivel y etapa están siempre visibles; las clases nuevas requieren elegir ambos antes de guardar.
 
 Mover una clase conserva su progreso, notas, respuestas y vocabulario. Borrar una clase requiere confirmación y elimina también esos datos asociados. Solo se pueden borrar niveles y etapas vacíos; primero mueve o elimina su contenido. No requiere una migración adicional.
+

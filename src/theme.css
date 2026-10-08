@@ -64,6 +64,7 @@
 .cover-upload .inspector-cover{display:block}
 table[data-vocabulary=true] td:first-child,table[data-vocabulary=true] th:first-child{width:30%}
 table[data-vocabulary=true] td p{margin:0}
+.document-body table[style*="--table-border-color"] :is(td,th),.rich-content table[style*="--table-border-color"] :is(td,th){border-color:var(--table-border-color)}
 .cover-load-error{display:block;padding:14px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:12px;line-height:1.5;margin:12px 0}
 .card-cover .cover-load-error.compact{position:relative;z-index:1;margin:35px 0 0;padding:6px 8px;font-size:10px;display:inline-block}
 [data-theme=dark] .cover-load-error{color:#e5d5fc}

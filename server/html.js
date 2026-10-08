@@ -16,6 +16,7 @@ export const clean=html=>sanitize(html||'',{
   color:[/^#[0-9a-f]{3,8}$/i,/^rgba?\([\d .,%]+\)$/,/^[a-z]+$/i],
   'background-color':[/^#[0-9a-f]{3,8}$/i,/^rgba?\([\d .,%]+\)$/,/^[a-z]+$/i],
   'border-color':[/^#[0-9a-f]{3,8}$/i,/^rgb\([\d ,]+\)$/],
+  '--table-border-color':[/^#[0-9a-f]{3,8}$/i,/^rgb\([\d ,]+\)$/],
   'font-size':[/^\d+(px|em|rem|%)$/],
   'font-family':[/^[a-z ,"'-]+$/i],
   'line-height':[/^\d+(\.\d+)?(px|em|%)?$/],
