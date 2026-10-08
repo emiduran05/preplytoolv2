@@ -1,5 +1,17 @@
 # Aula · PreplyTool V2
 
+## Desplegar en Vercel
+
+El proyecto incluye el frontend de Vite y la función `api/index.js`, que sirve Express. `vercel.json` dirige `/api/*` a esa función. Usa el preset Vite, comando `npm run build` y directorio de salida `dist`.
+
+En Settings → Environment Variables agrega `DATABASE_URL` (PostgreSQL remoto accesible desde Vercel), `DATABASE_SSL` según tu proveedor, `JWT_SECRET` (al menos 32 caracteres aleatorios), `TEACHER_EMAIL` y `TEACHER_PASSWORD`. Configúralas en los entornos donde usarás la app y vuelve a desplegar después de cambiarlas. No uses una conexión a localhost en Vercel. `.env` no se sube al repositorio.
+
+Restaura el respaldo en la base remota una sola vez si está vacía y ejecuta la migración desde tu computadora siguiendo la sección Conectar PostgreSQL. Si ya contiene los datos, omite la restauración. No subas el respaldo a GitHub: Vercel usa PostgreSQL y no habilita el modo de lectura del respaldo local.
+
+Para comprobar la API abre `https://TU_DOMINIO/api/config`: debe responder JSON. Si falta la conexión, devuelve un error de configuración JSON. El despliegue local no verifica la conexión de Vercel: confirma también el inicio de sesión y la biblioteca en la URL pública.
+
+Las funciones de Vercel limitan los cuerpos de petición y respuesta a 4.5 MB. Las imágenes incrustadas aumentan el tamaño de clases y catálogos: para contenido grande utiliza enlaces de imágenes alojadas externamente. Referencias: https://vercel.com/docs/frameworks/frontend/vite y https://vercel.com/docs/functions/limitations.
+
 React + Vite y API Node.js/Express, sobre las tablas del respaldo real `preplytool_backup.dump` (SQL PostgreSQL). El respaldo original se conserva intacto.
 
 ## Iniciar

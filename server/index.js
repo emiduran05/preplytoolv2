@@ -6,11 +6,16 @@ import {clean} from './html.js';
 import {createHash,randomBytes,timingSafeEqual} from 'node:crypto';
 import {existsSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {connected,snapshot,query} from './db.js';
 import {parseExercises,exerciseDocument,grade} from './exercises.js';
 import {presentLesson} from './lesson.js';
 import {catalogRoutes} from './catalog-routes.js';
 const app=express();app.use(helmet({contentSecurityPolicy:false}));app.use(express.json({limit:'12mb'}));
+app.use('/api',(req,res,next)=>{
+ if(!connected&&!snapshot)return res.status(503).json({error:'Configura DATABASE_URL con una base PostgreSQL accesible desde el servidor. En Vercel no se utiliza el respaldo local.'});
+ next();
+});
 const hash=v=>createHash('sha256').update(v).digest('hex');
 const storedExercises=raw=>{try{const value=JSON.parse(raw);if(Array.isArray(value)&&value.every(e=>['choice','boolean','fill','open','match'].includes(e.type)))return JSON.stringify(value)}catch{}return typeof raw==='string'?raw:'[]'};
 const ready=()=>process.env.JWT_SECRET?.length>=32&&!process.env.JWT_SECRET.startsWith('REEMPLAZAR')&&process.env.TEACHER_PASSWORD&&!process.env.TEACHER_PASSWORD.startsWith('REEMPLAZAR');
@@ -43,9 +48,13 @@ app.get('/api/students/:id/submissions/:lessonId',studentScope,async(req,res)=>{
  const {ejercicios_leccion,...rest}=submission;res.json({...rest,result:grade(parseExercises(ejercicios_leccion),rest.answers)});
 });
 app.post('/api/students/:id/submissions/:lessonId',studentScope,async(req,res)=>{if(req.user.role!=='student')return res.status(403).json({error:'Solo el alumno puede enviar respuestas.'});const {rows}=await query('SELECT ejercicios_leccion FROM lecciones WHERE id=$1',[req.params.lessonId]);if(!rows[0])return res.status(404).json({error:'Clase no encontrada.'});const answers=req.body.answers||{};const result=grade(parseExercises(rows[0].ejercicios_leccion),answers);await query('INSERT INTO aula_submissions(student_id,lesson_id,answers,score) VALUES($1,$2,$3,$4) ON CONFLICT(student_id,lesson_id) DO UPDATE SET answers=excluded.answers,score=excluded.score,updated_at=now()',[req.params.id,req.params.lessonId,answers,result.score]);res.json(result)});
-if(existsSync('dist')){app.use(express.static(resolve('dist')));app.get('/{*path}',(req,res)=>res.sendFile(resolve('dist/index.html')))}
+app.use('/api',(req,res)=>res.status(404).json({error:'Ruta de API no encontrada.'}));
+if(!process.env.VERCEL&&existsSync('dist')){app.use(express.static(resolve('dist')));app.get('/{*path}',(req,res)=>res.sendFile(resolve('dist/index.html')))}
 app.use((err,req,res,next)=>{console.error(err.message);res.status(500).json({error:'No se pudo completar la operación. Revisa la conexión y ejecuta las migraciones.'})});
-app.listen(Number(process.env.PORT)||3001,'127.0.0.1',()=>console.log(`Aula API: http://127.0.0.1:${process.env.PORT||3001} · ${connected?'PostgreSQL':'respaldo / solo lectura'}`));
+export default app;
+if(!process.env.VERCEL&&process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
+ app.listen(Number(process.env.PORT)||3001,'127.0.0.1',()=>console.log(`Aula API: http://127.0.0.1:${process.env.PORT||3001} · ${connected?'PostgreSQL':'respaldo / solo lectura'}`));
+}
 
 
 
