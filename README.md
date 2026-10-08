@@ -35,6 +35,8 @@ Abre http://127.0.0.1:5173. Sin DATABASE_URL válida se utiliza el respaldo en *
 
 ## Uso
 
+- Vocabulario: el profesor puede pulsar **Agregar vocabulario** al abrir una lección o en el editor. Introduce una palabra y su definición; se crea una tabla con ambas columnas al final del contenido, y cada nueva entrada agrega una fila a la misma tabla. En la vista de lectura se guarda inmediatamente; en el editor usa **Guardar clase**. La tabla forma parte de la lección compartida y también aparece para los alumnos. Se puede editar con las herramientas de tablas del editor y no necesita una migración de base de datos.
+
 - Biblioteca: crea o edita clases dentro de una etapa existente. Los niveles, etapas y orden se leen de tu respaldo.
 - Editor de documentos: cinta Inicio / Insertar / Tabla, estilos, fuentes, tamaño, negrita, cursiva, subrayado, tachado, listas, alineación, interlineado, colores y resaltado. Hoja de documento con zoom y detalles de clase en un panel lateral.
 - Imágenes: conserva las imágenes incrustadas del respaldo. Inserta mediante URL o carga PNG/JPG/WEBP/GIF/AVIF/BMP desde el equipo (máximo 6 MB por imagen). Haz clic y arrastra los tiradores de las esquinas para ajustar el tamaño manteniendo la proporción; guarda y vuelve a abrir para conservarlo. Los tiradores también admiten teclas de flecha (Shift para pasos mayores).

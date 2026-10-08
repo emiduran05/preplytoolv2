@@ -1,7 +1,7 @@
 import sanitize from 'sanitize-html';
 export const clean=html=>sanitize(html||'',{
  allowedTags:[...sanitize.defaults.allowedTags,'img','video','source','iframe','span','colgroup','col'],
- allowedAttributes:{'*':['style'],a:['href','target','rel'],img:['src','alt','title','width','height'],video:['src','controls','width','height'],source:['src','type'],iframe:['src','width','height','allowfullscreen'],td:['colspan','rowspan','colwidth','style'],th:['colspan','rowspan','colwidth','style'],col:['width','style']},
+ allowedAttributes:{'*':['style'],a:['href','target','rel'],img:['src','alt','title','width','height'],video:['src','controls','width','height'],source:['src','type'],iframe:['src','width','height','allowfullscreen'],table:['data-vocabulary'],td:['colspan','rowspan','colwidth','style'],th:['colspan','rowspan','colwidth','style'],col:['width','style']},
  allowedSchemesByTag:{img:['http','https','data']},
  transformTags:{'*':(tagName,attribs)=>{
   const styles=[];const align=attribs.class?.match(/ql-align-(center|right|justify)/)?.[1];

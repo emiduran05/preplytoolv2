@@ -100,3 +100,18 @@ test('portada avisa de páginas de Facebook y recupera un enlace directo al reem
 });
 
 
+
+test('vocabulario crea una sola tabla, se guarda y continúa desde el editor',async({page})=>{
+ await page.getByRole('button',{name:/Clase de prueba original/}).click();
+ const add=async(word,definition)=>{
+  await page.getByRole('button',{name:'Agregar vocabulario',exact:true}).click();const dialog=page.getByRole('dialog',{name:'Agregar vocabulario'});
+  await expect(dialog.getByRole('button',{name:'Agregar a la tabla'})).toBeDisabled();await dialog.getByRole('textbox',{name:'Palabra',exact:true}).fill(word);await dialog.getByRole('textbox',{name:'Definición',exact:true}).fill(definition);await dialog.getByRole('button',{name:'Agregar a la tabla'}).click();await expect(dialog).toHaveCount(0);
+ };
+ await add('saludar','Dirigir palabras de cortesía a una persona.');await add('despedirse','Decir adiós.');
+ const table=page.locator('.lesson-reading-content table[data-vocabulary=true]');await expect(table).toHaveCount(1);await expect(table.locator('tr')).toHaveCount(3);await expect(table.locator('th')).toHaveText(['Palabra','Definición']);await expect(table).toContainText('Dirigir palabras');
+ await page.reload();await page.getByRole('button',{name:/Clase de prueba original/}).click();await expect(table.locator('tr')).toHaveCount(3);
+ await page.getByRole('button',{name:'Editar clase',exact:true}).click();await add('aprender','Adquirir conocimientos.');const editorTable=page.locator('.document-body table[data-vocabulary=true]');await expect(editorTable).toHaveCount(1);await expect(editorTable.locator('tr')).toHaveCount(4);
+ await page.getByRole('button',{name:'Guardar clase',exact:true}).click();await expect(table.locator('tr')).toHaveCount(4);await expect(table).toContainText('Adquirir conocimientos.');
+ await add('<script>ejemplo</script>','Texto literal <b>sin ejecutar</b>.');await expect(table).toContainText('<script>ejemplo</script>');await expect(table.locator('script')).toHaveCount(0);
+ await page.getByRole('button',{name:'Activar modo oscuro'}).click();await expect(table).toBeVisible();await page.screenshot({path:'test-results/vocabulary-table.png',fullPage:true});
+});
