@@ -1,0 +1,68 @@
+.theme-toggle{position:fixed;right:20px;bottom:20px;z-index:95;box-shadow:0 4px 18px #24133926;font-size:12px;background:#fff;color:#5a3b99;border-color:#d9cdee}
+.brand .brand-icon{padding:4px;background:#eee7f7;border-radius:10px}
+.brand-logo{display:block;width:36px;height:36px;object-fit:contain}
+[data-theme=dark] .brand .brand-icon{background:#eee7f7}
+@media(max-width:760px){.brand-logo{width:30px;height:30px}}
+:root[data-theme=dark]{color-scheme:dark;background:#15121d;color:#eee8f8;--brand:#8962cf;--brand-hover:#9d77df;--brand-soft:#352748;--brand-border:#493b60;--dark-surface:#211b2d;--dark-muted:#b9accd;--dark-border:#40354f}
+[data-theme=dark] body{background:#15121d}
+[data-theme=dark] :is(aside,header,.stat,.lesson-card,.student-summary,.student-card,.notes-list article,.empty,.exercise,.exercise-builder,.login-card,.catalog-manager,.document-inspector,.editor-dialog,.word-ribbon){background:var(--dark-surface);border-color:var(--dark-border);color:#eee8f8}
+[data-theme=dark] :is(button,input,select,textarea){background:#282134;color:#eee8f8;border-color:var(--dark-border)}
+[data-theme=dark] button:hover{background:#352b46;border-color:#8b6cb8}
+[data-theme=dark] :is(input,select,textarea,button):focus-visible{outline-color:#b89ae9}
+[data-theme=dark] :is(p,small,label,.eyebrow,.tag,.stat-top,.filters>span,.catalog-manager small,.document-status,.document-navigation>span,.ribbon-group>small,.document-back,.exercise-author-header p,.note-text,.progress-save-status,.lesson-student-context>span:not(.avatar),footer){color:var(--dark-muted)}
+[data-theme=dark] :is(header,footer,.catalog-lesson,.exercise-section,.note-editor,.document-status,.ribbon-tabs,.ribbon-group,.card-body>div){border-color:var(--dark-border)}
+[data-theme=dark] :is(.brand,.login-card .brand,.word-editor){color:#eee8f8}
+[data-theme=dark] :is(.workspace span,.brand-version,.avatar,.help-card,.preview-banner,.access-box,.lesson-student-context,.editor-toolbar,.lesson-location,.image-context,.exercise-count,.exercise-result,.result){background:#30253f;color:#d7c6ef;border-color:#493b60}
+[data-theme=dark] :is(nav button.active,.catalog-manager button.selected,.document-navigation button.selected,.ribbon-tabs button.selected,.ribbon-style-options button.selected,.ribbon-tool.is-active){background:#44305e;color:#e8d7ff;border-color:#926acb}
+[data-theme=dark] :is(nav button,.card-body>div,.document-name svg,.help-card svg,.stat-top svg){color:#beaad9}
+[data-theme=dark] .primary{background:var(--brand);border-color:var(--brand);color:#fff}
+[data-theme=dark] .primary:hover{background:var(--brand-hover);border-color:var(--brand-hover)}
+[data-theme=dark] .feature{background:linear-gradient(120deg,#30223f,#3c2b51 65%,#453339);color:#eee8f8}
+[data-theme=dark] .feature p{color:#c9bbda}
+[data-theme=dark] .feature button{background:#4b3863;color:#fff}
+[data-theme=dark] .art-circle{background:#503a69}
+[data-theme=dark] .card-cover{background:#49345f}
+[data-theme=dark] .theme-1{background:#323c59}
+[data-theme=dark] .theme-2{background:#574235}
+[data-theme=dark] .theme-3{background:#52384f}
+[data-theme=dark] :is(.cover-level,.completed){background:#211b2de6;color:#eee8f8}
+[data-theme=dark] .search{background:#282134;border-color:var(--dark-border);color:#beaad9}
+[data-theme=dark] :is(.progress-track,.document-area,.document-ruler){background:#19141f;color:#b9accd}
+[data-theme=dark] .progress-track span{background:#a17bd8}
+[data-theme=dark] .login{background:radial-gradient(ellipse at top left,#3b2852,transparent 65%),#15121d}
+[data-theme=dark] :is(.lesson-fullscreen,.lesson-fullscreen .lesson-actions){background:#15121d;color:#eee8f8}
+[data-theme=dark] :is(.option,.upload-image-button,.add-exercise-button,.insert-gap-button){background:#282134;border-color:var(--dark-border);color:#eee8f8}
+[data-theme=dark] :is(.error,.editor-message){background:#462831;color:#ffd6d1;border-color:#70444b}
+[data-theme=dark] :is(.answer-feedback.correct,.exercise-result strong){color:#9ed8b0}
+[data-theme=dark] .answer-feedback.incorrect{color:#f2a399}
+[data-theme=dark] .answer-feedback.manual{color:#dec58d}
+/* Theme overrides affect display only; the saved lesson formatting is unchanged. */
+[data-theme=dark] :is(.document-sheet,.rich-content){color:#eee8f8;background:var(--dark-surface);border-color:var(--dark-border)}
+[data-theme=dark] .paper{color:#342647;background:#fff}
+[data-theme=dark] .rich-content p{color:inherit}
+[data-theme=dark] .document-sheet :is(label,small){color:var(--dark-muted)}
+[data-theme=dark] .document-sheet p{color:inherit}
+[data-theme=dark] .document-sheet input.document-class-title{background:transparent;color:#eee8f8;border-color:var(--dark-border)}
+[data-theme=dark] :is(.document-body,.rich-content) :is(td,th){border-color:#59476f}
+[data-theme=dark] :is(.document-body,.rich-content) th{background:#30253f}
+[data-theme=dark] :is(.document-body,.rich-content) a{color:#c8a7ff}
+[data-theme=dark] :is(.document-body,.rich-content) blockquote{color:#c9bbda;border-color:#8962cf}
+[data-theme=dark] :is(.document-body,.rich-content) [style*="color"]{color:inherit!important}
+[data-theme=dark] :is(.document-body,.rich-content) [style*="background"]{background-color:#30253f!important}
+[data-theme=dark] :is(.document-body,.rich-content) mark{background:#624d26;color:#fff0c5}
+[data-theme=dark] .ribbon-tabs{background:#282134}
+[data-theme=dark] .mini-note{color:#5a3b99}
+[data-theme=dark] .document-area{border-color:var(--dark-border)}
+[data-theme=dark] .rich-content :is(input,textarea){background:#282134;color:#eee8f8;border-color:#8b6cb8}
+[data-theme=dark] .rich-content input.gap-correct{background:#203c2c;color:#b1e6c1;border-color:#66a377}
+[data-theme=dark] .rich-content input.gap-incorrect{background:#462831;color:#ffd6d1;border-color:#d18479}
+[data-theme=dark] :is(.video-node-caption,.answer-token){background:#30253f;color:#d7c6ef}
+[data-theme=dark] .theme-toggle{background:#30253f;border-color:#594370;color:#e5d5fc}
+.cover-upload{display:flex;flex-direction:column;gap:10px}
+.cover-upload button{font-size:12px}
+.cover-upload small{line-height:1.5}
+.cover-upload .inspector-cover{display:block}
+.cover-load-error{display:block;padding:14px;border-radius:8px;background:var(--brand-soft);color:var(--brand);font-size:12px;line-height:1.5;margin:12px 0}
+.card-cover .cover-load-error.compact{position:relative;z-index:1;margin:35px 0 0;padding:6px 8px;font-size:10px;display:inline-block}
+[data-theme=dark] .cover-load-error{color:#e5d5fc}
+@media(max-width:760px){.theme-toggle{right:12px;bottom:12px;padding:10px}.theme-toggle span{display:none}.document-inspector .inspector-cover{display:block;width:100%;max-width:220px}}

@@ -1,0 +1,10 @@
+import StarterKit from '@tiptap/starter-kit';
+import {TextStyleKit} from '@tiptap/extension-text-style';
+import {Table,TableRow,TableCell,TableHeader} from '@tiptap/extension-table';
+import TextAlign from '@tiptap/extension-text-align';
+import {ResizableImage} from './ResizableImage.jsx';
+import {Video} from './Video.jsx';
+const cellAttributes=parent=>({...parent,background:{default:null,parseHTML:e=>e.style.backgroundColor,renderHTML:a=>a.background?{style:`background-color:${a.background}`}:{}}});
+const Cell=TableCell.extend({addAttributes(){return cellAttributes(this.parent?.())}});
+const Header=TableHeader.extend({addAttributes(){return cellAttributes(this.parent?.())}});
+export const extensions=[StarterKit.configure({link:{openOnClick:false}}),TextStyleKit,ResizableImage,Video,Table.configure({resizable:true}),TableRow,Cell,Header,TextAlign.configure({types:['heading','paragraph']})];
