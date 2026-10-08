@@ -4,6 +4,7 @@ import {LessonExercises} from './LessonExercises.jsx';
 import {StudentAvatar} from './StudentAvatar.jsx';
 import {CoverImage} from './CoverImage.jsx';
 import {VocabularyDialog} from './VocabularyDialog.jsx';
+import {ClassAccess} from './ClassAccess.jsx';
 export function Lesson({lesson,student,teacher,preview,progress,progressLoading=false,onProgress,onEdit,onBack,onVocabulary,busy}){
  const root=useRef(null);
  const [vocabularyOpen,setVocabularyOpen]=useState(false);
@@ -19,6 +20,7 @@ export function Lesson({lesson,student,teacher,preview,progress,progressLoading=
  async function save(value){setSaveError('');setSaveStatus('Guardando…');try{await onProgress(value);setSaveStatus('Progreso y notas guardados.')}catch(error){setCompleted(current?.completed||false);setSaveStatus('');setSaveError(error.message)}}
  return <div ref={root} className={'lesson-view '+(expanded?'lesson-fullscreen':'')}><div className="lesson-actions"><button onClick={()=>leave(onBack)}>← Volver</button><div><button onClick={fullscreen}>{expanded?<Minimize2 size={17}/>:<Maximize2 size={17}/>} {expanded?'Salir de pantalla completa':'Pantalla completa'}</button>{teacher&&<button disabled={busy} onClick={()=>setVocabularyOpen(true)}>Agregar vocabulario</button>}{teacher&&<button className="primary" onClick={()=>leave(onEdit)}>{student?'Editar en biblioteca':'Editar clase'}</button>}</div></div>
  {teacher&&student&&<div className="lesson-student-context"><StudentAvatar student={student}/><strong>Progreso de {student.nombre}</strong><span>{progressLoading?'Cargando progreso…':'Lección de la biblioteca · notas y avance de este alumno.'}</span></div>}
+ {teacher&&student&&<ClassAccess key={student.id+"-"+lesson.id} student={student} lesson={lesson}/>}
  <div className="lesson-reading-content"><div className="eyebrow">TU ESPACIO DE APRENDIZAJE</div><h1>{lesson.titulo_clase||lesson.nombre}</h1>
  <CoverImage source={lesson.img_banner} className="lesson-banner" alt="Portada de clase"/>
  <article className="rich-content" dangerouslySetInnerHTML={{__html:lesson.contenido_leccion||'<p>Esta clase todavía no tiene contenido.</p>'}}/>
@@ -28,6 +30,7 @@ export function Lesson({lesson,student,teacher,preview,progress,progressLoading=
  {student&&<section className="note-editor"><h2>Notas de clase · {student.nombre}</h2>{teacher?<><label className="option"><input type="checkbox" disabled={busy||progressLoading} checked={completed} onChange={event=>{const next=event.target.checked;setCompleted(next);save({completed:next,notes})}}/>Clase completada <small>Se guarda automáticamente al cambiar</small></label><textarea aria-label="Notas de clase" disabled={busy||progressLoading} value={notes} onChange={event=>{setNotes(event.target.value);setSaveStatus('Notas sin guardar.')}} placeholder="Lo que vimos, dudas y próximos pasos…"/><button className="primary" disabled={busy||progressLoading} onClick={()=>save({completed,notes})}>Guardar progreso y notas</button><div className="progress-save-status" role="status">{saveStatus==='Progreso y notas guardados.'&&<CheckCircle2 size={16}/>} {saveStatus}</div>{saveError&&<div className="error" role="alert">{saveError}</div>}</>:<><p>{progressLoading?'Cargando progreso…':completed?'✓ Clase completada':'Clase pendiente'}</p><p className="note-text">{notes||'Tu profesor aún no ha agregado notas.'}</p></>}</section>}
  </div>{vocabularyOpen&&<VocabularyDialog saveImmediately onAdd={onVocabulary} onClose={()=>setVocabularyOpen(false)}/>}</div>;
 }
+
 
 
 

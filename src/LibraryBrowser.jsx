@@ -4,18 +4,19 @@ import './library.css';
 
 const sort=(rows,key)=>[...rows].sort((a,b)=>(a[key]??0)-(b[key]??0)||a.id-b.id);
 const normalize=value=>(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
-export function initialLibraryView(){try{return localStorage.getItem('preplytool-library-view')==='all'?'all':'sections'}catch{return 'sections'}}
-export function LibraryBrowser({data,view,onViewChange,path,onPathChange,renderLessons}){
+export function initialLibraryView(storageKey='preplytool-library-view'){try{return localStorage.getItem(storageKey)==='all'?'all':'sections'}catch{return 'sections'}}
+export function LibraryBrowser({data,view,onViewChange,path,onPathChange,renderLessons,searchAllLessons=false,storageKey='preplytool-library-view'}){
  const [search,setSearch]=useState(''),[levelFilter,setLevelFilter]=useState('');
  const level=data.niveles.find(n=>n.id===path.level),stage=level&&data.etapas.find(s=>s.id===path.stage&&s.nivel_id===level.id);
  function navigate(next){setSearch('');onPathChange(next)}
- function changeView(next){setSearch('');setLevelFilter('');onViewChange(next);try{localStorage.setItem('preplytool-library-view',next)}catch{}}
+ function changeView(next){setSearch('');setLevelFilter('');onViewChange(next);try{localStorage.setItem(storageKey,next)}catch{}}
  const matches=row=>normalize(row.nombre||row.titulo_clase).includes(normalize(search));
  const stages=sort(data.etapas.filter(s=>s.nivel_id===level?.id),'orden_etapa');
- const lessons=sort(data.lecciones.filter(l=>view==='all'?(!levelFilter||data.etapas.find(s=>s.id===l.etapa_id)?.nivel_id===Number(levelFilter)):l.etapa_id===stage?.id),'orden_leccion').filter(matches);
+ const searchingLessons=searchAllLessons&&Boolean(normalize(search));
+ const lessons=sort(data.lecciones.filter(l=>view==='all'?(!levelFilter||data.etapas.find(s=>s.id===l.etapa_id)?.nivel_id===Number(levelFilter)):searchingLessons?(stage?l.etapa_id===stage.id:level?stages.some(s=>s.id===l.etapa_id):true):l.etapa_id===stage?.id),'orden_leccion').filter(matches);
  const groups=(level?stages:sort(data.niveles,'orden_nivel')).filter(matches);
- const showingLessons=view==='all'||Boolean(stage);
- const kind=showingLessons?'lecciones':level?'etapas':'niveles';
+ const showingLessons=view==='all'||Boolean(stage)||searchingLessons;
+ const kind=searchAllLessons||showingLessons?'lecciones':level?'etapas':'niveles';
  return <section className="library-browser" aria-label="Explorar biblioteca">
   <div className="library-view-switch" role="group" aria-label="Vista de la biblioteca">
    <button type="button" aria-pressed={view==='sections'} onClick={()=>changeView('sections')}><Layers size={17}/>Por niveles</button>

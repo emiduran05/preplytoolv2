@@ -79,3 +79,5 @@ En **Biblioteca de clases**, el panel **Niveles y etapas** muestra la estructura
 
 Mover una clase conserva su progreso, notas, respuestas y vocabulario. Borrar una clase requiere confirmación y elimina también esos datos asociados. Solo se pueden borrar niveles y etapas vacíos; primero mueve o elimina su contenido. No requiere una migración adicional.
 
+
+El profesor puede abrir una clase desde el portal de un alumno y pulsar **Crear acceso privado a esta clase**. El enlace abre directamente esa lección, limita su catálogo, notas y respuestas a esa clase y caduca a los 30 días. El acceso al portal completo se sigue creando desde el resumen del alumno. No requiere una migración adicional.
