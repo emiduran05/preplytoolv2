@@ -1,4 +1,4 @@
-export function createHandler(loadApp=()=>import('../server/index.js')){
+export function createHandler(loadApp=()=>import('../server/.generated/app.mjs')){
  let application;
  return async function handler(req,res){
   try{

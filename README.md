@@ -2,7 +2,7 @@
 
 ## Desplegar en Vercel
 
-El proyecto incluye el frontend de Vite y la función `api/index.js`, que sirve Express. `vercel.json` dirige `/api/*` a esa función. Usa el preset Vite, comando `npm run build` y directorio de salida `dist`. `package.json` fija Node.js 24.x para el build y las funciones: `sanitize-html` 2.18.0 utiliza un parser ESM que necesita un runtime moderno con soporte para `require(ESM)`. Si el proyecto ya existía, confirma Node.js 24.x en Settings → Build and Deployment y redespliega sin reutilizar la caché de build.
+El proyecto incluye el frontend de Vite y la función `api/index.js`, que sirve Express. `vercel.json` dirige `/api/*` a esa función. Usa el preset Vite, comando `npm run build` y directorio de salida `dist`. `package.json` fija Node.js 24.x para el build y las funciones. La compilación ejecuta `scripts/build-server.js` antes de Vite: empaqueta Express y sus dependencias en `server/.generated/app.mjs` para evitar `ERR_REQUIRE_ESM` al cargar el parser desde `sanitize-html`. La función importa ese archivo y `includeFiles` garantiza su inclusión en Vercel. No se sube el archivo generado a GitHub. Si el proyecto ya existía, confirma Node.js 24.x en Settings → Build and Deployment y redespliega sin reutilizar la caché de build. No reemplaces el comando de build por `vite build`, porque omitiría la API.
 
 En Settings → Environment Variables agrega `DATABASE_URL` (PostgreSQL remoto accesible desde Vercel), `DATABASE_SSL` según tu proveedor, `JWT_SECRET` (al menos 32 caracteres aleatorios), `TEACHER_EMAIL` y `TEACHER_PASSWORD`. Configúralas en los entornos donde usarás la app y vuelve a desplegar después de cambiarlas. No uses una conexión a localhost en Vercel. `.env` no se sube al repositorio.
 

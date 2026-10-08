@@ -9,7 +9,9 @@
     "dev": "concurrently -k \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "node --watch --watch-path=server --watch-path=.env server/index.js",
     "dev:client": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "npm run build:server && vite build",
+    "build:server": "node scripts/build-server.js",
+    "pretest": "npm run build:server",
     "start": "node server/index.js",
     "db:restore": "node scripts/restore.js",
     "db:migrate": "node scripts/migrate.js",
@@ -46,6 +48,7 @@
     "vite": "^6.4.1"
   },
   "devDependencies": {
+    "esbuild": "0.25.12",
     "@playwright/test": "^1.64.0",
     "concurrently": "^9.2.0"
   },
